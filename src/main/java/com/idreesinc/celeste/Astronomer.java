@@ -22,6 +22,7 @@ public class Astronomer extends BukkitRunnable {
         }
         List<World> worlds = celeste.getServer().getWorlds();
         for (World world : worlds) {
+            float multiplier = 1;
             CelesteConfig config = celeste.configManager.getConfigForWorld(world.getName());
             if (!celeste.configManager.doesWorldHaveOverrides(world.getName())
                     && !world.getEnvironment().equals(World.Environment.NORMAL)) {
@@ -32,7 +33,9 @@ public class Astronomer extends BukkitRunnable {
                 continue;
             }
             if (!(world.getTime() >= config.beginSpawningStarsTime && world.getTime() <= config.endSpawningStarsTime)) {
-                continue;
+                if(!config.starsDaylight)
+                    continue;
+                multiplier = config.dayMultiplier;
             }
             if (world.hasStorm()) {
                 continue;
@@ -63,10 +66,10 @@ public class Astronomer extends BukkitRunnable {
 
             if(config.newMoonMeteorShower && (world.getFullTime() / 24000) % 8 == 4) {
                 shootingStarsPerMin = adaptiveShootingStarsChance + config.shootingStarsPerMinuteMeteorShower;
-                fallingStarPerMin = adaptiveFallingStarsChance + config.fallingStarsPerMinuteMeteorShower;
+                fallingStarPerMin = (adaptiveFallingStarsChance + config.fallingStarsPerMinuteMeteorShower) * multiplier;
             } else {
                 shootingStarsPerMin = adaptiveShootingStarsChance + config.shootingStarsPerMinute;
-                fallingStarPerMin = adaptiveFallingStarsChance + config.fallingStarsPerMinute;
+                fallingStarPerMin = (adaptiveFallingStarsChance + config.fallingStarsPerMinute) * multiplier;
             }
 
             shootingStarChance = shootingStarsPerMin / 120d;

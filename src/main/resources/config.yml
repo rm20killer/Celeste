@@ -28,3 +28,6 @@ debug: false
 adaptive-falling-stars: 0
 adaptive-shooting-stars: 0
 adaptive-use-global-player-count: true
+#allow for falling stars to spawn during the day with a lower chance
+falling-stars-daylight: false
+falling-stars-day-multiplicative: 0
